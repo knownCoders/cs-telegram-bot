@@ -1,0 +1,22 @@
+{
+  "name": "telebot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "express": "^4.18.2",
+    "node-telegram-bot-api": "^0.64.0",
+    "qrcode-terminal": "^0.12.0",
+    "socks5-https-client": "^1.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
