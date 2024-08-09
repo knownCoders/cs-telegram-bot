@@ -1,3 +1,4 @@
+process.env.NTBA_FIX_319 = 1
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require("fs");
 const path = require('path');
@@ -74,6 +75,23 @@ bot.on('message', (msg) => {
 
 });
 
+
+function getFileType(filePath) {
+  const ext = path.extname(filePath).slice(1);
+  switch (ext) {
+    case 'pdf':
+      return 'application/pdf';
+    case 'xlsx':
+    case 'xls':
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    case 'docx':
+    case 'doc':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    default:
+      return 'application/octet-stream';
+  }
+}
+
 const sendbooks = (type = 0 || 1,chatId,data) => { 
     const folderPath = __dirname + "/computer scince/level_"+ data?.lv + "/term_" + data?.trm + "/" + data.fol + "/" + type;
     if (fs.existsSync(folderPath)) {
@@ -84,13 +102,15 @@ const sendbooks = (type = 0 || 1,chatId,data) => {
           return;
         }
         if (files.length == 0) {
-          bot.sendMessage(chatId,"🫢 ops !!");
+            
+          bot.sendMessage(chatId,"غير موجود حاليا");
         } else {
           files.forEach( async file => {
             const filePath = path.join(folderPath, file);
-            const res = await bot.sendDocument(chatId,filePath)
-            console.log(res);
+            const res = await bot.sendDocument(chatId,filePath,{},{contentType:getFileType(file)})
+            // console.log(res);
           });
+
         }
       });
       
@@ -235,7 +255,7 @@ bot.on("callback_query",(Q)=>{
             }
           });
         } else {
-          console.log(query.data.term,"//////////////////////////");
+          // console.log(query.data.term,"//////////////////////////");
         }
         break;
       }
@@ -248,8 +268,7 @@ bot.on("callback_query",(Q)=>{
         if (query.data?.isWorkable) {
           let subjects = localDB["level" + current.level ]["term" + (current.term)];
           const nameOfSubject = subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]?.text
-
-
+          console.log(subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]);
           bot.editMessageText(nameOfSubject?`/      ${nameOfSubject[0]?.text}         \\`:"/                  ^_^                    \\",
         {
           chat_id:chatId,
