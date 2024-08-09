@@ -103,7 +103,7 @@ const sendbooks = async  (type = 0 || 1,chatId,data,mesgId) => {
           bot.sendMessage(chatId,"🫢 ops !!");
           setTimeout(() => {
             replayListAfterSend(chatId)
-          }, 500);
+          }, 1000);
           return;
         }
         if (files.length == 0) {
@@ -116,7 +116,7 @@ const sendbooks = async  (type = 0 || 1,chatId,data,mesgId) => {
             if (a?.length-1 == x) {
               setTimeout(() => {
                 replayListAfterSend(chatId)
-              }, 500);
+              }, 1000);
             }
           });
         }
@@ -126,7 +126,7 @@ const sendbooks = async  (type = 0 || 1,chatId,data,mesgId) => {
     bot.sendMessage(chatId,"🫢 ops !!");
     setTimeout(() => {
       replayListAfterSend(chatId)
-    }, 500);
+    }, 1000);
    }
 
  }
@@ -147,7 +147,7 @@ const sendChannels = async (type = 0 || 1,chatId,data,mesgId) => {
         if (a?.length-1 == x) {
           setTimeout(() => {
             replayListAfterSend(chatId)
-          }, 500);
+          }, 1000);
         }
       })
 
@@ -155,13 +155,13 @@ const sendChannels = async (type = 0 || 1,chatId,data,mesgId) => {
       bot.sendMessage(chatId,"لاتوجد روابط حاليا");
       setTimeout(() => {
         replayListAfterSend(chatId)
-      }, 500);
+      }, 1000);
     }
   } else {
     bot.sendMessage(chatId,"لاتوجد روابط حاليا");
     setTimeout(() => {
       replayListAfterSend(chatId)
-    }, 500);
+    }, 1000);
   }
  
 
