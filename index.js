@@ -47,6 +47,8 @@ const current = {
 
 bot.on('message', (msg) => {
 
+  console.log(JSON.stringify(msg));
+  
   const chatId = msg?.chat?.id , mesgId = msg?.message_id , text = msg?.text;
   if (text == 'من عمك') {
     bot.sendMessage(chatId,"علي باوزير ")
@@ -92,60 +94,83 @@ function getFileType(filePath) {
   }
 }
 
-const sendbooks = (type = 0 || 1,chatId,data) => { 
+const sendbooks = async  (type = 0 || 1,chatId,data,mesgId) => { 
     const folderPath = __dirname + "/computer scince/level_"+ data?.lv + "/term_" + data?.trm + "/" + data.fol + "/" + type;
     if (fs.existsSync(folderPath)) {
         fs.readdir( folderPath,  (err, files) => {
         if (err) {
           console.error('حدث خطأ في قراءة محتوى المجلد:', err);
           bot.sendMessage(chatId,"🫢 ops !!");
+          setTimeout(() => {
+            replayListAfterSend(chatId)
+          }, 500);
           return;
         }
         if (files.length == 0) {
             
-          bot.sendMessage(chatId,"غير موجود حاليا");
+          bot.sendMessage(chatId,"غير موجوده حاليا");
         } else {
-          files.forEach( async file => {
+          files.forEach( async (file,x,a) => {
             const filePath = path.join(folderPath, file);
             const res = await bot.sendDocument(chatId,filePath,{},{contentType:getFileType(file)})
-            // console.log(res);
+            if (a?.length-1 == x) {
+              setTimeout(() => {
+                replayListAfterSend(chatId)
+              }, 500);
+            }
           });
-
         }
       });
       
    } else {
     bot.sendMessage(chatId,"🫢 ops !!");
+    setTimeout(() => {
+      replayListAfterSend(chatId)
+    }, 500);
    }
+
  }
 
-const sendChannels = async (type = 0 || 1,chatId,data) => { 
+const sendChannels = async (type = 0 || 1,chatId,data,mesgId) => { 
   const folderPath = __dirname + "/computer scince/level_"+ data?.lv + "/term_" + data?.trm + "/" + data.fol + "/youtube.json";
   if (fs.existsSync(folderPath)) {
     const red = JSON.parse(fs.readFileSync(folderPath));
     if (red && red?.length != 0) {
-      red.map((ele)=>{
-        bot.sendMessage(chatId,`${ele?.desc}
+      red.map( async (ele,x,a)=>{
+        await bot.sendMessage(chatId,`${ele?.desc}
 
          إسم القناة : ${ele?.channelName} .
          الرابط : [إضغط هنا](${ele?.link}).
         `,{
           parse_mode:"Markdown"
         })
+        if (a?.length-1 == x) {
+          setTimeout(() => {
+            replayListAfterSend(chatId)
+          }, 500);
+        }
       })
+
     }else{
-      bot.sendMessage(chatId,"🫢 ops !!");
+      bot.sendMessage(chatId,"لاتوجد روابط حاليا");
+      setTimeout(() => {
+        replayListAfterSend(chatId)
+      }, 500);
     }
   } else {
-    bot.sendMessage(chatId,"🫢 ops !!");
+    bot.sendMessage(chatId,"لاتوجد روابط حاليا");
+    setTimeout(() => {
+      replayListAfterSend(chatId)
+    }, 500);
   }
  
 
+
 }
 
-const backHandler = (chatId,To,mesgId) => { 
+const backHandler = (chatId,To,mesgId,backAfterSendBooksOrChannels) => {
+ 
   switch (To) {
-
     case "home":
       bot.editMessageText(" 👨‍🎓      حدد المستوى الدراسي     👨‍🎓 ",
       {
@@ -186,12 +211,13 @@ const backHandler = (chatId,To,mesgId) => {
         chat_id:chatId,
         message_id:mesgId,
         reply_markup:{
-          inline_keyboard:[...subjects?.concat(
+          inline_keyboard:[
+            ...subjects,
             [
               {text:"عودة 🔙",callback_data:JSON.stringify({type:"back",data:{backTo:"term"}})},
               {text:"القائمة الرئيسية 🔝",callback_data:JSON.stringify({type:"back",data:{backTo:"home"}})},
             ]
-          )],
+          ],
         }
       });
       break;
@@ -203,6 +229,29 @@ const backHandler = (chatId,To,mesgId) => {
       break;
   }
 }
+
+const replayListAfterSend = (chatId) => { 
+        
+  let subjects = [...localDB["level" + current.level ]["term" + (current.term)]];
+  
+  const nameOfSubject = subjects.find(e=>e[0]?.callback_data.includes(current?.subj?.folder))
+ 
+  bot.sendMessage(chatId,`/    ${nameOfSubject[0]?.text}    \\`,
+    {
+     
+      reply_markup:{
+        inline_keyboard : [
+        [{text:"الملازم 📚",callback_data:JSON.stringify({type:"books",lv:current.level,trm:current.term,fol:current.subj.folder})}],
+        [{text:"نماذج إختبارات 📃",callback_data:JSON.stringify({type:"exams",lv:current.level,trm:current.term,fol:current.subj.folder})}],
+        [{text:" قنوات يوتيوب ▶️",callback_data:JSON.stringify({type:"youtubechannels",lv:current.level,trm:current.term,fol:current.subj.folder})}],
+        [
+          {text:"عودة 🔙",callback_data:JSON.stringify({type:"back",data:{backTo:"subj"}})},
+          {text:"القائمة الرئيسية 🔝",callback_data:JSON.stringify({type:"back",data:{backTo:"home"}})},
+        ]
+      ],
+      }
+    });
+ }
 
 bot.on("callback_query",(Q)=>{
   const query = JSON.parse(Q.data) , mesgId = Q.message.message_id;
@@ -251,7 +300,8 @@ bot.on("callback_query",(Q)=>{
                [
                 {text:"عودة 🔙",callback_data:JSON.stringify({type:"back",data:{backTo:"term"}})},
                 {text:"القائمة الرئيسية 🔝",callback_data:JSON.stringify({type:"back",data:{backTo:"home"}})},
-              ]],
+              ]
+            ],
             }
           });
         } else {
@@ -265,13 +315,17 @@ bot.on("callback_query",(Q)=>{
       case "subj":{
         // ## Current subject ##
         current.subj = query.data;
+        
+        let subjects = [...localDB["level" + current.level ]["term" + (current.term)]];
+        
+
+        
+        const nameOfSubject = subjects.find(e=>e[0]?.callback_data.includes(query?.data?.folder))
+       
+        
         if (query.data?.isWorkable) {
 
-          let subjects = localDB["level" + current.level ]["term" + (current.term)];
-
-          const nameOfSubject = [...subjects].find((ele)=>ele?.callback_data?.includes(query.data?.folder));
-          // console.log(subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]);
-          bot.editMessageText(nameOfSubject?.text?`/      ${nameOfSubject?.text}         \\`:"/                  ^_^                    \\",
+          bot.editMessageText(`/      ${nameOfSubject[0]?.text}         \\`,
         {
           chat_id:chatId,
           message_id:mesgId,
@@ -289,7 +343,7 @@ bot.on("callback_query",(Q)=>{
           }
         });
         } else {
-          bot.editMessageText("/                  ^_^                    \\",
+          bot.editMessageText(`/    ${nameOfSubject[0]?.text}    \\`,
         {
           chat_id:chatId,
           message_id:mesgId,
@@ -310,21 +364,22 @@ bot.on("callback_query",(Q)=>{
       }
       case "WorkableBooks":{
         //  يعني0 الملازم النظري و 1 للملازم العملي
-        sendbooks(1,chatId,query)
+        sendbooks(1,chatId,query,mesgId)
         break;
       }
       case "exams":{
         //  يعني0 الملازم النظري و 1 للملازم العملي
-        sendbooks("exams",chatId,query)
+        sendbooks("exams",chatId,query,mesgId)
+
         break;
       }
       case "books":{
         //  يعني0 الملازم النظري و 1 للملازم العملي
-        sendbooks(0,chatId,query)
+        sendbooks(0,chatId,query,mesgId)
         break;
       }
       case "youtubechannels":{
-        sendChannels(0,chatId,query)
+        sendChannels(0,chatId,query,mesgId)
         break;
       }
       case "back":{
