@@ -186,12 +186,12 @@ const backHandler = (chatId,To,mesgId) => {
         chat_id:chatId,
         message_id:mesgId,
         reply_markup:{
-          inline_keyboard:subjects?.concat(
+          inline_keyboard:[...subjects?.concat(
             [
               {text:"عودة 🔙",callback_data:JSON.stringify({type:"back",data:{backTo:"term"}})},
               {text:"القائمة الرئيسية 🔝",callback_data:JSON.stringify({type:"back",data:{backTo:"home"}})},
             ]
-          ),
+          )],
         }
       });
       break;
@@ -266,10 +266,12 @@ bot.on("callback_query",(Q)=>{
         // ## Current subject ##
         current.subj = query.data;
         if (query.data?.isWorkable) {
+
           let subjects = localDB["level" + current.level ]["term" + (current.term)];
-          const nameOfSubject = subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]?.text
-          console.log(subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]);
-          bot.editMessageText(nameOfSubject?`/      ${nameOfSubject[0]?.text}         \\`:"/                  ^_^                    \\",
+
+          const nameOfSubject = [...subjects].find((ele)=>ele?.callback_data?.includes(query.data?.folder));
+          // console.log(subjects.find((ele)=> ele[0].callback_data != "" ? JSON.parse(ele[0].callback_data)?.data?.folder == query.data.folder : false )[0]);
+          bot.editMessageText(nameOfSubject?.text?`/      ${nameOfSubject?.text}         \\`:"/                  ^_^                    \\",
         {
           chat_id:chatId,
           message_id:mesgId,
