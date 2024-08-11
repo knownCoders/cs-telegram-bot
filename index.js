@@ -1,28 +1,35 @@
 process.env.NTBA_FIX_319 = 1
+require('dotenv').config()
 const TelegramBot = require('node-telegram-bot-api');
 const fs = require("fs");
 const path = require('path');
 const { localDB } = require('./subjects');
 const bodyParser = require('body-parser');
-// replace the value below with the Telegram token you receive from @BotFather
+
 
 const express = require('express');
-
-
-const botToken = process.env.TELEGRAM_TOKEN;
-
-const bot = new TelegramBot(botToken,{polling:false});
-
-bot.setWebHook(process.env.SERVER_URL+"/webhook/"+botToken)
 
 const app = express();
 app.use(bodyParser.json());
 
+const botToken = process.env.TELEGRAM_TOKEN;
 
-app.post('/webhook/'+botToken, (req, res) => {
+const bot = new TelegramBot(botToken,{
+  webHook:true,
+});
+
+
+bot.setWebHook(process.env.SERVER_URL+"/webhook",)
+
+
+
+
+app.post('/webhook', (req, res) => {
+
     const data = req.body; // البيانات التي تم إرسالها من الويب هوك
     bot.processUpdate(data)
     res.sendStatus(200);
+    
 });
 
 app.get("/",(req,res)=>{
