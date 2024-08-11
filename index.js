@@ -9,20 +9,21 @@ const bodyParser = require('body-parser');
 const express = require('express');
 
 
-const botToken = '6902681746:AAFELtFHrXmJZ-ywamUznEp4Y1fSC-N3qwM';
-const bot = new TelegramBot(botToken,{polling:true});
+const botToken = process.env.TELEGRAM_TOKEN;
 
-// bot.setWebHook("https://tiny-rose-pig-hose.cyclic.app/webhook"+botToken)
+const bot = new TelegramBot(botToken,{polling:false});
+
+bot.setWebHook(process.env.SERVER_URL+"/webhook/"+botToken)
 
 const app = express();
 app.use(bodyParser.json());
 
 
-// app.post('/webhook'+botToken, (req, res) => {
-//     const data = req.body; // البيانات التي تم إرسالها من الويب هوك
-//     bot.processUpdate(data)
-//     res.sendStatus(200);
-// });
+app.post('/webhook/'+botToken, (req, res) => {
+    const data = req.body; // البيانات التي تم إرسالها من الويب هوك
+    bot.processUpdate(data)
+    res.sendStatus(200);
+});
 
 app.get("/",(req,res)=>{
   res.status(200).sendFile(path.join(__dirname, '/index.html'))
