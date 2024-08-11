@@ -16,7 +16,7 @@ const botToken = process.env.TELEGRAM_TOKEN;
 
 const bot = new TelegramBot(botToken,{
   // webHook:true,
-  polling:treu
+  polling:true
 });
 
 
