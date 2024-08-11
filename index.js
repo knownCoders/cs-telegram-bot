@@ -12,26 +12,8 @@ const express = require('express');
 const app = express();
 app.use(bodyParser.json());
 
-const botToken = process.env.TELEGRAM_TOKEN;
-
-const bot = new TelegramBot(botToken,{
-  // webHook:true,
-  polling:true
-});
 
 
-// bot.setWebHook(process.env.SERVER_URL+"/webhook",)
-
-
-
-
-// app.post('/webhook', (req, res) => {
-
-//     const data = req.body; // البيانات التي تم إرسالها من الويب هوك
-//     bot.processUpdate(data)
-//     res.sendStatus(200);
-    
-// });
 
 app.get("/",(req,res)=>{
   res.status(200).sendFile(path.join(__dirname, '/index.html'))
@@ -39,8 +21,34 @@ app.get("/",(req,res)=>{
 
 const port = process.env.PORT || 3000
 
+const botToken = process.env.TELEGRAM_TOKEN;
+
+const bot = new TelegramBot(botToken,{
+  // webHook:true,
+  polling:false
+});
+
 app.listen(port, () => {
+bot.setWebHook(process.env.SERVER_URL+"/webhook",)
+.then((res)=>{
+  console.log(res);
+}).catch((Ee)=>{
+  Ee
+})
   console.log('Server is running ' + port);
+});
+
+
+
+
+
+
+app.post('/webhook', (req, res) => {
+
+    const data = req.body; // البيانات التي تم إرسالها من الويب هوك
+    bot.processUpdate(data)
+    res.sendStatus(200);
+    
 });
 
 bot.on("polling_error", ()=>{});
@@ -403,4 +411,5 @@ bot.on("callback_query",(Q)=>{
 
 })
 
+bot.startPolling()
 
