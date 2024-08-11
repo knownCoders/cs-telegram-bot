@@ -15,22 +15,23 @@ app.use(bodyParser.json());
 const botToken = process.env.TELEGRAM_TOKEN;
 
 const bot = new TelegramBot(botToken,{
-  webHook:true,
+  // webHook:true,
+  polling:treu
 });
 
 
-bot.setWebHook(process.env.SERVER_URL+"/webhook",)
+// bot.setWebHook(process.env.SERVER_URL+"/webhook",)
 
 
 
 
-app.post('/webhook', (req, res) => {
+// app.post('/webhook', (req, res) => {
 
-    const data = req.body; // البيانات التي تم إرسالها من الويب هوك
-    bot.processUpdate(data)
-    res.sendStatus(200);
+//     const data = req.body; // البيانات التي تم إرسالها من الويب هوك
+//     bot.processUpdate(data)
+//     res.sendStatus(200);
     
-});
+// });
 
 app.get("/",(req,res)=>{
   res.status(200).sendFile(path.join(__dirname, '/index.html'))
