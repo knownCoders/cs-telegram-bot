@@ -31,9 +31,10 @@ const bot = new TelegramBot(botToken,{
 app.listen(port, () => {
 bot.setWebHook(process.env.SERVER_URL+"/webhook",)
 .then((res)=>{
-  console.log(res);
+  console.log(res,"dllllllllllllllllllllllllllllllllll");
 }).catch((Ee)=>{
-  Ee
+  console.log(Ee,"EeEeEeEeEeEeEeEeEeEeEeEeEeEe");
+
 })
   console.log('Server is running ' + port);
 });
