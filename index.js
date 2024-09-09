@@ -66,7 +66,6 @@ const current = {
 
 bot.on('message', (msg) => {
 
-  console.log(JSON.stringify(msg));
   
   const chatId = msg?.chat?.id , mesgId = msg?.message_id , text = msg?.text;
   if (text == 'من عمك') {
@@ -84,7 +83,7 @@ bot.on('message', (msg) => {
         inline_keyboard:[
           [{text:"مستوى اول", callback_data:JSON.stringify({type:"level",data:1,})}],
           [{text:"مستوى ثاني",callback_data:JSON.stringify({type:"level",data:2,})}],
-          // [{text:"مستوى ثالث",callback_data:JSON.stringify({type:"level",data:3,})}],
+          [{text:"مستوى ثالث",callback_data:JSON.stringify({type:"level",data:3,})}],
           // [{text:"مستوى رابع",callback_data:JSON.stringify({type:"level",data:4,})}],
         ]
       }

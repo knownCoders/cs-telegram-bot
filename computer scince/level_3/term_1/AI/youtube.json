@@ -1,0 +1,17 @@
+[
+    {
+        "channelName":"Ahmed Sallam",
+        "link":"https://www.youtube.com/playlist?list=PLMm8EjqH1EFVR5O5wZCAy9x9mautNuxI6",
+        "desc":"Intro to Artificial Intelligence - مقدمة في الذكاء الإصطناعي"
+    },
+    {
+        "channelName":"Simplilearn",
+        "link":"https://www.youtube.com/playlist?list=PLEiEAq2VkUULyr_ftxpHB6DumOq1Zz2hq",
+        "desc":"🔥Artificial Intelligence | Artificial Intelligence Course  : \n This playlist covers everything from the basics of AI to more advanced topics like machine learning and deep learning."
+    },
+    {
+        "channelName":"freeCodeCamp.org",
+        "link":"https://www.youtube.com/watch?v=5NgNicANyqM",
+        "desc":"This course from Harvard University explores the concepts and algorithms at the foundation of modern artificial intelligence, diving into the ideas that give rise to technologies like large language models, game-playing engines, handwriting recognition, and machine translation. Through hands-on projects, students gain exposure to the theory behind graph search algorithms, classification, optimization, reinforcement learning, and other topics in artificial intelligence and machine learning as they incorporate them into their own Python programs"
+    }
+]

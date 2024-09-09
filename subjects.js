@@ -349,7 +349,92 @@ const localDB = {
     ],
   },
   level3: {
-    term1: [],
+    term1: [
+      [
+        {
+          text: "Artificial Intelligence",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: true,
+              folder: "AI",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Professional Ethics",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: false,
+              folder: "PE",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Technical Writing",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: false,
+              folder: "TW",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Visual Programming",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: true,
+              folder: "VP",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Fundamentals of Computer Networks",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: true,
+              folder: "CN",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Database Administration",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: true,
+              folder: "DBA",
+            },
+          }),
+        },
+      ],
+      [
+        {
+          text: "Software Engineering",
+          callback_data: JSON.stringify({
+            type: "subj",
+            data: {
+              isWorkable: true,
+              folder: "SE",
+            },
+          }),
+        },
+      ],
+    ],
     term2: [],
   },
   level4: {
